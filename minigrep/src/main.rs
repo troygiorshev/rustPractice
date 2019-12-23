@@ -15,13 +15,13 @@ fn main() {
     // println!("{:?}", args); // As usual, [0] is the path to the binary itself
 
     let config = Config::new(&args).unwrap_or_else(|e| {
-        println!("Problem parsing arguments: {}", e);
+        eprintln!("Problem parsing arguments: {}", e);
         process::exit(1);
     });
 
     // No unwrapping needed here
     if let Err(e) = minigrep::run(config) {
-        println!("Error: {}", e);
+        eprintln!("Error: {}", e);
         process::exit(1);
     }
 }
