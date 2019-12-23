@@ -6,28 +6,9 @@
 //! TODO: Find a (the?) Rust style guide.  PEP 8 equivalent?
 
 use std::env;
-use std::fs;
 use std::process;
 
-struct Config {
-    pattern: String,
-    filename: String,
-}
-
-impl Config {
-    fn new(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments");
-        }
-
-        // I'll learn a better way than clone() later
-        let pattern = args[1].clone();
-        let filename = args[2].clone();
-
-        Ok(Config { pattern, filename })
-    }
-}
-
+use minigrep::Config;
 fn main() {
     let args: Vec<String> = env::args().collect(); // Iterators as usual
 
@@ -37,13 +18,10 @@ fn main() {
         println!("Problem parsing arguments: {}", e);
         process::exit(1);
     });
-    // More on closures next chapter
 
-    println!("Search Pattern: {}", config.pattern);
-    println!("In file: {}", config.filename);
-
-    let contents = fs::read_to_string(&config.filename)
-        .expect(&format!("Reading file `{}` failed", config.filename));
-
-    println!("\nText:\n\n{}", contents);
+    // No unwrapping needed here
+    if let Err(e) = minigrep::run(config) {
+        println!("Error: {}", e);
+        process::exit(1);
+    }
 }
