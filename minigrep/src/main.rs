@@ -1,6 +1,4 @@
 //! Troy Giorshev  
-//! Started: 2019-11-01  
-//! Finished:  
 //! From <https://doc.rust-lang.org/book/ch12-00-an-io-project.html>  
 //! I haven't gone through Ch 14 yet, so my documentation will be ~~a little~~ rough.  
 //! TODO: Find a (the?) Rust style guide.  PEP 8 equivalent?

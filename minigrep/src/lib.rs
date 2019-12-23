@@ -21,6 +21,9 @@ impl Config {
 
         Ok(Config { pattern, filename , case_sensitive})
     }
+
+    // Extension one day, use `clap` crate for parsing command line arguments
+    // <https://mattgathu.github.io/writing-cli-app-rust/>
 }
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
