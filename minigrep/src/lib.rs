@@ -12,7 +12,6 @@ impl Config {
             return Err("Not enough arguments");
         }
 
-        // I'll learn a better way than clone() later
         let pattern = args[1].clone();
         let filename = args[2].clone();
 
@@ -21,12 +20,42 @@ impl Config {
 }
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    println!("Search Pattern: {}", config.pattern);
-    println!("In file: {}", config.filename);
-
     let contents = fs::read_to_string(&config.filename)?;
 
-    println!("\nText:\n\n{}", contents);
+    for line in search(&config.pattern, &contents) {
+        println!("{}", line)
+    }
 
     Ok(()) // This says "we're using this fn for its side effects only"
+}
+
+fn search<'a>(pattern: &str, contents: &'a str) -> Vec<&'a str> {
+    let mut ret = Vec::new();
+    
+    for line in contents.lines() {
+        if line.contains(pattern){
+            ret.push(line)
+        }
+    }
+
+    ret
+}
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let pattern = "duct";
+        // This is an interesting way of doing long multi-line strings
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(pattern, contents));
+    }
 }
