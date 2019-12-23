@@ -7,12 +7,37 @@
 
 use std::env;
 use std::fs;
+use std::process;
+
+struct Config {
+    pattern: String,
+    filename: String,
+}
+
+impl Config {
+    fn new(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
+            return Err("Not enough arguments");
+        }
+
+        // I'll learn a better way than clone() later
+        let pattern = args[1].clone();
+        let filename = args[2].clone();
+
+        Ok(Config { pattern, filename })
+    }
+}
 
 fn main() {
     let args: Vec<String> = env::args().collect(); // Iterators as usual
+
     // println!("{:?}", args); // As usual, [0] is the path to the binary itself
 
-    let config = Config::new(&args); // ok
+    let config = Config::new(&args).unwrap_or_else(|e| {
+        println!("Problem parsing arguments: {}", e);
+        process::exit(1);
+    });
+    // More on closures next chapter
 
     println!("Search Pattern: {}", config.pattern);
     println!("In file: {}", config.filename);
@@ -21,19 +46,4 @@ fn main() {
         .expect(&format!("Reading file `{}` failed", config.filename));
 
     println!("\nText:\n\n{}", contents);
-}
-
-struct Config {
-    pattern: String,
-    filename: String,
-}
-
-impl Config {
-    fn new(args: &[String]) -> Config {
-        // I'll learn a better way than clone() later
-        let pattern = args[1].clone();
-        let filename = args[2].clone();
-
-        Config { pattern, filename }
-    }
 }
